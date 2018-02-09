@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/main.css' />
+    <link rel='stylesheet' href='/stylesheets/hierarchy.css' />
+    <!-- <link rel='stylesheet' href='/stylesheets/histogram.css' /> -->
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="hidden-xs-down sidebar">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link header" href="/">
+                            HTC Visualization</a>
+                        <hr/>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-list-alt"></i> Summary</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/hierarchy">
+                            <i class="fas fa-sitemap"></i> Hierarchy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/level">
+                            <i class="fas fa-sort-amount-down"></i> Level</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/classes">
+                            <i class="fas fa-window-restore"></i> Class</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/features">
+                            <i class="fas fa-chart-bar"></i> Feature</a>
+                    </li>
+                </ul>
+            </nav>
+            <main>
+                <div class="row main-header">
+                    <i class="fas fa-database fa-lg"></i>&nbsp; Wiki Medium
+                </div>
+                <hr/>
+                <div class="content">
+                    <div class="col-12 graphbox">
+                        <svg class="graph"></svg>
+                        <div class="col-12 focus">
+                            Focus class: class4
+                        </div>
+                    </div>
+                    <div class="col-12 settingbox">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-form-label">Selected classes:</label>
+                            <div class="filter-input">
+                                <div class="root">
+                                    <input type="email" class="input" id="input_search" oninput="updateText()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-inline form-frequency">
+                            <div class="form-group mb-2 group-frequency">
+                                <label for="staticEmail2">Maximum child level:</label>
+                                <input type="text" class="form-control" id="staticEmail2">
+                                <label for="staticEmail2">Maximum parent level:</label>
+                                <input type="text" class="form-control" id="staticEmail2">
+                            </div>
+                            <button type="submit" class="btn btn-primary mb-2">Apply</button>
+                        </div>
+                        <div class="row">
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="/javascripts/hierarchy/graph.js"></script>
+    <script src="/javascripts/hierarchy/search.js"></script>
+</body>
+
+</html>

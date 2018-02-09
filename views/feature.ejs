@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %> | HTC visualization
+    </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/main.css' />
+    <link rel='stylesheet' href='/stylesheets/feature.css' />
+    <link rel='stylesheet' href='/stylesheets/histogram.css' />
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="hidden-xs-down sidebar">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link header" href="/">
+                            HTC Visualization</a>
+                        <hr/>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-list-alt"></i> Summary</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/hierarchy">
+                            <i class="fas fa-sitemap"></i> Hierarchy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/level">
+                            <i class="fas fa-sort-amount-down"></i> Level</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= (yaxis == 'classes') ? 'active' : '' %>" href="/classes">
+                            <i class="fas fa-window-restore"></i> Class</a>
+                    </li>
+                    <li class="nav-item">
+
+                        <a class="nav-link <%= (yaxis == 'features') ? 'active' : '' %>" href="/features">
+                            <i class="fas fa-chart-bar"></i> Feature</a>
+                    </li>
+                </ul>
+            </nav>
+            <main>
+                <div class="row main-header">
+                    <i class="fas fa-database fa-lg"></i>&nbsp; Wiki Medium
+                </div>
+                <hr/>
+                <div class="content">
+                    <div class="col-12 graphbox">
+                        <div class="row">
+                            <div class="col-6 graphtitle">
+                                <%= title %>
+                            </div>
+                            <div class="col-6 graphother">
+                                <a href="/<%= yaxis %>/<%= (filter == " " ? " " : filter) %>">
+                                    See
+                                    <%= (filter == "" ? "documents" : filter) %> x
+                                        <%= yaxis %>
+                                            >>>
+                                </a>
+                            </div>
+                        </div>
+                        <svg class="graph"></svg>
+                        <hr style="margin: 0px" />
+                        <div class="row summary">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <b>Average</b>
+                                        <br>(<%= xaxis %>)</div>
+                                    <div class="col-4 next">
+                                        <b>Max</b>
+                                        <br>(<%= xaxis %>)</div>
+                                    <div class="col-4 next">
+                                        <b>Min</b>
+                                        <br>(<%= xaxis %>)</div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-4" id="average">4</div>
+                                    <div class="col-4 next" id="max">2000</div>
+                                    <div class="col-4 next" id="min">1</div>
+                                </div>
+                            </div>
+                            <div class="col-3 number_of_classes">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <b>selected</b>
+                                        <br>(<%= yaxis %>)
+                                    </div>
+                                    <div class="col-6 next">
+                                        <b>other</b>
+                                        <br>(<%= yaxis %>)
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-6" id="number_of_classes">2</div>
+                                    <div class="col-6 next" id="number_of_other_classes">2</div>
+                                </div>
+                            </div>
+                            <div class="col-3 export">
+                                <div class="row">
+                                    <button class="btn btn-success">Export Selected
+                                        <%= yaxis %>
+                                    </button>
+                                </div>
+                                <div class="row">
+                                    <button class="btn btn-danger">Export Other
+                                        <%= yaxis %>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 settingbox">
+                        <% if(filter != "") {%>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-form-label">Filter
+                                    <%= filter %>
+                                </label>
+                                <div class="filter-input">
+                                    <div class="root">
+                                        <input type="email" class="input" id="input_search" oninput="updateText()" />
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                                <div class="form-inline form-frequency">
+                                    <div class="form-group mb-2 group-frequency">
+                                        <label for="staticEmail2">Minimum Frequency</label>
+                                        <input type="text" class="form-control" id="minFreq">
+                                        <label for="staticEmail2">Maximum Frequency</label>
+                                        <input type="text" class="form-control" id="maxFreq">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mb-2" onclick="update_graph()">Apply</button>
+                                </div>
+                                <div class="row">
+                                </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="/javascripts/<%= yaxis %>/<%= xaxis %>/graph_config.js"></script>
+    <script src="/javascripts/graph.js"></script>
+    <script src="/javascripts/search.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Exo');
+@import "color";
+
+@sidebar_width: 250px;
+@main_width: calc( ~"100% - 250px" );
+
+
+body {
+    // padding: 50px;
+    font-family: 'Open Sans', sans-serif;
+    color: #373c46;
+    background-color: #f4f7fb;
+  }
+  
+  .navbar-grey {
+    background: #373c46;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    .navbar-brand {
+      font-size: 24px;
+      padding-left: 15px;
+      color: white
+    }
+  }
+  
+  .sidebar {
+    font-family: 'Exo', sans-serif;
+    font-size: 120%;
+    background-color: #222729;
+    position: fixed;
+    top: 0px;
+    bottom: 0;
+    left: 0;
+    -webkit-box-flex: 0;
+    // -ms-flex: 0 0 20%;
+    // flex: 0 0 20%;
+    width: @sidebar_width;
+    z-index: 1000;
+    padding: 0px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    border-right: 1px solid #eee;
+    .nav-link {
+      padding: 12px;
+      border-radius: 0px;
+      font-size: 16px;
+      // font-size: 20px;
+      color: white;
+    }
+    hr {
+      margin: 0px 20px 20px 20px;
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    .header {
+      padding: 25px 20px 15px 20px;
+      font-size: 20px;
+      text-align: center;
+    }
+    i {
+      margin-right: 5px;
+    }
+    .nav-pills{
+      .active {
+        color: @tertiary;
+        background: #353d40;
+      }
+    }
+  }
+  
+main {
+    background-color: #f4f7fb;
+    // margin-top:62px;
+    padding: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: @sidebar_width;
+    -webkit-box-flex: 0;
+    // -ms-flex: 0 0 80%;
+    // flex: 0 0 80%;
+    width: @main_width;
+    h3 {
+        margin: 10px
+    }
+    .content {
+        margin-left: auto;
+        margin-right: auto;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    .main-header{
+      padding: 25px 40px 15px 40px;
+      font-size: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+    hr {
+      margin: 0 0px 20px 0px;
+    }
+}
