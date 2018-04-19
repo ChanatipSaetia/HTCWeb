@@ -10,6 +10,7 @@
     <link rel='stylesheet' href='/stylesheets/main.css' />
     <link rel='stylesheet' href='/stylesheets/feature.css' />
     <link rel='stylesheet' href='/stylesheets/histogram.css' />
+    <link rel='stylesheet' href='/stylesheets/slider.css' />
 </head>
 
 <body>
@@ -24,31 +25,40 @@
                         <hr/>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/">
+                        <a class="nav-link" href="/<%= dataset %>/">
                             <i class="fas fa-list-alt"></i> Summary</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/hierarchy">
+                        <a class="nav-link" href="/<%= dataset %>/hierarchy">
                             <i class="fas fa-sitemap"></i> Hierarchy</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/level">
+                        <a class="nav-link" href="/<%= dataset %>/level">
                             <i class="fas fa-sort-amount-down"></i> Level</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <%= (yaxis == 'classes') ? 'active' : '' %>" href="/classes">
+                        <a class="nav-link <%= (yaxis == 'classes') ? 'active' : '' %>" href="/<%= dataset %>/classes">
                             <i class="fas fa-window-restore"></i> Class</a>
                     </li>
                     <li class="nav-item">
 
-                        <a class="nav-link <%= (yaxis == 'features') ? 'active' : '' %>" href="/features">
+                        <a class="nav-link <%= (yaxis == 'features') ? 'active' : '' %>" href="/<%= dataset %>/features">
                             <i class="fas fa-chart-bar"></i> Feature</a>
+                    </li>
+                    <hr/>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-arrow-alt-circle-left"></i> Back to Main Menu</a>
                     </li>
                 </ul>
             </nav>
             <main>
+                <p class="dataset_name" style="display: none;">
+                    <%= dataset %>
+                </p>
                 <div class="row main-header">
-                    <i class="fas fa-database fa-lg"></i>&nbsp; Wiki Medium
+                    <i class="fas fa-database fa-lg"></i>&nbsp;
+                    <%= dataset %>
                 </div>
                 <hr/>
                 <div class="content">
@@ -58,7 +68,7 @@
                                 <%= title %>
                             </div>
                             <div class="col-6 graphother">
-                                <a href="/<%= yaxis %>/<%= (filter == " " ? " " : filter) %>">
+                                <a href="/<%= dataset %>/<%= yaxis %>/<%= (filter == " " ? " " : filter) %>">
                                     See
                                     <%= (filter == "" ? "documents" : filter) %> x
                                         <%= yaxis %>
@@ -67,19 +77,42 @@
                             </div>
                         </div>
                         <svg class="graph"></svg>
+                        <div class="row">
+                            <div class="offset-10 col-2 logscale" onclick="toggleScale()">
+                                <input type="checkbox" id="changeScale" class="form-check-input">
+                                <label class="form-check-label" for="exampleCheck1">log scale</label>
+                            </div>
+                            <div class="col-10 slide_box">
+                                <svg class="slideMax"></svg>
+                            </div>
+                            <div class="col-2 slider_label">
+                                X axis range
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-10 slide_box">
+                                <svg class="slide"></svg>
+                            </div>
+                            <div class="col-2 slider_label">
+                                Number of bins
+                            </div>
+                        </div>
                         <hr style="margin: 0px" />
                         <div class="row summary">
                             <div class="col-6">
                                 <div class="row">
                                     <div class="col-4">
                                         <b>Average</b>
-                                        <br>(<%= xaxis %>)</div>
+                                        <br>
+                                        <%= "(" + xaxis %>)</div>
                                     <div class="col-4 next">
                                         <b>Max</b>
-                                        <br>(<%= xaxis %>)</div>
+                                        <br>
+                                        <%= "(" + xaxis %>)</div>
                                     <div class="col-4 next">
                                         <b>Min</b>
-                                        <br>(<%= xaxis %>)</div>
+                                        <br>
+                                        <%= "(" + xaxis %>)</div>
                                 </div>
                                 <hr/>
                                 <div class="row">
@@ -91,12 +124,14 @@
                             <div class="col-3 number_of_classes">
                                 <div class="row">
                                     <div class="col-6">
-                                        <b>selected</b>
-                                        <br>(<%= yaxis %>)
+                                        <b>Selected</b>
+                                        <br>
+                                        <%= "(" + yaxis %>)
                                     </div>
                                     <div class="col-6 next">
-                                        <b>other</b>
-                                        <br>(<%= yaxis %>)
+                                        <b>Other</b>
+                                        <br>
+                                        <%= "(" + yaxis %>)
                                     </div>
                                 </div>
                                 <hr/>
@@ -107,49 +142,25 @@
                             </div>
                             <div class="col-3 export">
                                 <div class="row">
-                                    <button class="btn btn-success">Export Selected
+                                    <button class="btn btn-success" onclick="exportData()">Export selected
                                         <%= yaxis %>
                                     </button>
                                 </div>
                                 <div class="row">
-                                    <button class="btn btn-danger">Export Other
+                                    <button class="btn btn-danger" onclick="exportData(true)">Export other
                                         <%= yaxis %>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 settingbox">
-                        <% if(filter != "") {%>
-                            <div class="form-group row">
-                                <label for="inputEmail3" class="col-form-label">Filter
-                                    <%= filter %>
-                                </label>
-                                <div class="filter-input">
-                                    <div class="root">
-                                        <input type="email" class="input" id="input_search" oninput="updateText()" />
-                                    </div>
-                                </div>
-                            </div>
-                            <% } %>
-                                <div class="form-inline form-frequency">
-                                    <div class="form-group mb-2 group-frequency">
-                                        <label for="staticEmail2">Minimum Frequency</label>
-                                        <input type="text" class="form-control" id="minFreq">
-                                        <label for="staticEmail2">Maximum Frequency</label>
-                                        <input type="text" class="form-control" id="maxFreq">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary mb-2" onclick="update_graph()">Apply</button>
-                                </div>
-                                <div class="row">
-                                </div>
-                    </div>
                 </div>
             </main>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
@@ -158,8 +169,11 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="/javascripts/<%= yaxis %>/<%= xaxis %>/graph_config.js"></script>
+    <script src="/javascripts/slider.js"></script>
+    <script src="/javascripts/sliderMax.js"></script>
     <script src="/javascripts/graph.js"></script>
     <script src="/javascripts/search.js"></script>
+    <script src="/javascripts/loadFile.js"></script>
 </body>
 
 </html>

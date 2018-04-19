@@ -1,25 +1,27 @@
+
+
 var class_name = '.graph'
-var color = 'tertiary'
-var minimum = 0
-var maximum = 200000
+var color = 'third'
+var bin_size = 10
+var scaleLog = false
 
+var width_graph = parseInt(d3.select(".graphbox").style("width")) - margin * 3;
 let graph = d3.select(class_name)
-let margin = 30;
+height = width_graph * 0.4 - margin * 2;
 
-var width = parseInt(d3.select(".graphbox").style("width")) - margin * 3,
-    height = width * 0.4 - margin * 2;
+if (height > 300) {
+    height = 300
+}
 
-graph.attr('width', width + margin * 3)
+graph.attr('width', width_graph + margin * 3)
     .attr('height', height + margin * 2)
 
-var formatCount = d3.format(",.0f");
 
-
-function getWidth(text) {
+function getWidth(t) {
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext("2d");
     ctx.font = 36 + " Open Sans";
-    var w = ctx.measureText(text).width;
+    var w = ctx.measureText(t).width;
     return w
 }
 
@@ -31,20 +33,16 @@ var svg = d3.select(class_name),
     g = svg.append("g")
         .attr("transform", "translate(" + (margin + 20) + "," + margin + ")");
 
-maximum = maximum > Math.round(d3.max(data) * 1.6) ? Math.round(d3.max(data) * 1.6) : maximum
-
-document.getElementById("max").innerHTML = d3.format(",.2f")(d3.max(data))
-document.getElementById("min").innerHTML = d3.format(",.2f")(d3.min(data))
-document.getElementById("average").innerHTML = d3.format(",.2f")(d3.mean(data))
-document.getElementById("number_of_classes").innerHTML = data.length
-
-var x = d3.scaleLinear()
+x = d3.scaleLinear()
     .domain([minimum, maximum])
-    .rangeRound([0, width]);
+    .range([0, width_graph])
+
+x2 = d3.scaleLinear()
+    .domain([minimum, maximum])
 
 var bins = d3.histogram()
     .domain(x.domain())
-    .thresholds(x.ticks(20))
+    .thresholds([...Array(bin_size).keys()].map((x) => x2.invert(x / bin_size)))
     (data);
 
 let narray = []
@@ -75,53 +73,11 @@ function make_y_gridlines(y) {
 g.append("g")
     .attr("class", "grid")
     .call(make_y_gridlines(y)
-        .tickSize(-width)
+        .tickSize(-width_graph)
         .tickFormat("")
     )
 
 let body_graph = g.append("g").attr("class", "body_graph " + color)
-var bar = body_graph.selectAll(".bar")
-    .data(bins)
-    .enter().append("g")
-    .attr("class", "bar")
-    .attr("transform", function (d) { return "translate(" + (x(d.x0) + x(bins[0].x1) - x(bins[0].x0)) + "," + height + ")"; });
-
-bar.append("rect")
-    .attr("x", 1)
-    .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1.0)
-    .attr("transform", "rotate(180)")
-    .attr("fill", color).transition()
-    .duration(750)
-    .delay(function (d, i) { return i * 10; })
-    .attr("height", function (d) { return height - y(d.length); });
-
-bar.append("text")
-    .attr("dy", ".75em")
-    .attr("x", - (x(bins[0].x1) - x(bins[0].x0)) / 2)
-    .attr("text-anchor", "middle")
-    .attr("fill", function (d) {
-        if (getHeight(formatCount(d.length)) > height - y(d.length))
-            return "#000"
-        else
-            return "#fff"
-    })
-    .text(function (d) {
-        if (d.length > 0) {
-            return formatCount(d.length);
-        }
-        else {
-            return "";
-        }
-    }).transition()
-    .duration(750)
-    .delay(function (d, i) { return i * 10; })
-    .attr("y", function (d) {
-        let real_y = y(d.length) - height + 10
-        if (real_y > -13)
-            real_y = -13;
-        return real_y;
-    });
-
 
 g.append("g")
     .attr("class", "axis axis--x")
@@ -129,8 +85,8 @@ g.append("g")
     .call(d3.axisBottom(x))
     .append("text")
     // .attr("transform", "rotate(-90)")
-    .attr("x", width)
-    .attr("y", -10)
+    .attr("x", width_graph)
+    .attr("y", 20)
     .attr("dy", ".71em")
     .style("text-anchor", "end")
     .attr("fill", "black")
@@ -190,7 +146,7 @@ summary.append("text")
     .attr("x", "-5px")
     .attr("y", "0px")
     .style("font-size", "14px")
-    .text("<")
+    .text("<=")
 
 summary.append("text")
     .attr("class", "more")
@@ -208,15 +164,15 @@ summary.append("text")
 
 
 mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
-    .attr('width', width) // can't catch mouse events on a g element
+    .attr('width', width_graph) // can't catch mouse events on a g element
     .attr('height', height)
     .attr('fill', 'none')
     .attr('pointer-events', 'all')
     .on('mouseout', function () { // on mouse out hide line, circles and text
         d3.select(".mouse-line")
-            .style("opacity", "1");
+            .style("opacity", "0");
         d3.selectAll(".mouse-summary")
-            .style("opacity", "1");
+            .style("opacity", "0");
     })
     .on('mouseover', function () { // on mouse in show line, circles and text
         d3.select(".mouse-line")
@@ -235,14 +191,14 @@ mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
 
 
         x_sum = mouse[0] < boxsize / 2 ? boxsize / 2 : mouse[0]
-        x_sum = x_sum > width - boxsize / 2 ? width - boxsize / 2 : x_sum
+        x_sum = x_sum > width_graph - boxsize / 2 ? width_graph - boxsize / 2 : x_sum
         d3.select(".mouse-summary")
             .attr("transform", "translate(" + x_sum + ",20)")
 
         let threshold = Math.round(x.invert(mouse[0])) - minimum
-        let less = stack.slice(0, threshold)
+        let less = stack.slice(0, threshold + 1)
         less = less.length > 0 ? less.reduce((a, b) => { return a + b }) : 0
-        let more = stack.slice(threshold, stack.length)
+        let more = stack.slice(threshold + 1, stack.length)
         more = more.length > 0 ? more.reduce((a, b) => { return a + b }) : 0
         d3.select(".less")
             .text(formatCount(less) + " " + yaxis)
@@ -254,37 +210,30 @@ mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
             .text(formatCount(x.invert(mouse[0])))
     });
 
-
-function update_graph() {
-    let new_minimum = document.getElementById("minFreq").value,
-        new_maximum = document.getElementById("maxFreq").value;
-    if (new_minimum != "")
-        minimum = parseInt(new_minimum)
-    if (new_maximum != "")
-        maximum = parseInt(new_maximum)
-
-
-    maximum = maximum > Math.round(d3.max(data) * 1.6) ? Math.round(d3.max(data) * 1.6) : maximum
-
-    now_data = data.filter((d) => {
+if (bins[1].length / bins[0].length < 0.1) {
+    toggleScale()
+} else {
+    var now_data = data.filter((d) => {
         return d >= minimum && d <= maximum
     })
+    update_graph(true)
+}
 
-    document.getElementById("max").innerHTML = d3.format(",.2f")(d3.max(now_data))
-    document.getElementById("min").innerHTML = d3.format(",.2f")(d3.min(now_data))
+function update_graph(animate) {
+
+    document.getElementById("max").innerHTML = d3.format(",.0f")(d3.max(now_data))
+    document.getElementById("min").innerHTML = d3.format(",.0f")(d3.min(now_data))
     document.getElementById("average").innerHTML = d3.format(",.2f")(d3.mean(now_data))
-    document.getElementById("number_of_classes").innerHTML = now_data.length
+    document.getElementById("number_of_classes").innerHTML = d3.format(",.0f")(now_data.length)
+    document.getElementById("number_of_other_classes").innerHTML = d3.format(",.0f")(data.length - now_data.length)
 
-
-    x.domain([minimum, maximum])
-
-    bins = d3.histogram()
+    var bins = d3.histogram()
         .domain(x.domain())
-        .thresholds(x.ticks(20))
+        .thresholds([...Array(bin_size).keys()].map((x) => x2.invert(x / bin_size)))
         (now_data);
 
     narray = []
-    for (let i = 0; i < Math.round(maximum) + 1; i++) {
+    for (let i = 0; i <= Math.round(maximum) + 1; i++) {
         narray.push(i)
     }
 
@@ -299,7 +248,7 @@ function update_graph() {
     y.domain([0, d3.max(bins, function (d) { return d.length; })])
     var g = d3.select('.grid')
         .call(make_y_gridlines(y)
-            .tickSize(-width)
+            .tickSize(-width_graph)
             .tickFormat("")
         )
 
@@ -315,25 +264,17 @@ function update_graph() {
         .attr("class", "bar")
         .attr("transform", function (d) { return "translate(" + (x(d.x0) + x(bins[0].x1) - x(bins[0].x0)) + "," + height + ")"; });
 
-    bar.append("rect")
+    let rect = bar.append("rect")
         .attr("x", 1)
         .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1.0)
         .attr("transform", "rotate(180)")
-        .attr("fill", color).transition()
-        .duration(750)
-        .delay(function (d, i) { return i * 10; })
-        .attr("height", function (d) { return height - y(d.length); });
+        .attr("fill", color)
 
-    bar.append("text")
+    let text = bar.append("text")
         .attr("dy", ".75em")
         .attr("x", - (x(bins[0].x1) - x(bins[0].x0)) / 2)
         .attr("text-anchor", "middle")
-        .attr("fill", function (d) {
-            if (d.length < 20)
-                return "#000"
-            else
-                return "#fff"
-        })
+        .attr("fill", "#000")
         .text(function (d) {
             if (d.length > 0) {
                 return formatCount(d.length);
@@ -341,21 +282,107 @@ function update_graph() {
             else {
                 return "";
             }
-        }).transition()
-        .duration(750)
-        .delay(function (d, i) { return i * 10; })
-        .attr("y", function (d) {
-            let real_y = y(d.length) - height + 10
-            if (real_y > -13)
-                real_y = -13;
-            return real_y;
-        });
+        })
 
-    d3.select('.axis--x')
-        .transition().duration(500)
-        .call(d3.axisBottom(x));
 
-    d3.select('.axis--y')
-        .transition().duration(500)
-        .call(d3.axisLeft(y));
+    axis_x = d3.select('.axis--x')
+
+    axis_y = d3.select('.axis--y')
+
+    if (animate) {
+        rect = rect.transition()
+            .duration(750)
+            .delay(function (d, i) { return i * 10; })
+        text = text.transition()
+            .duration(750)
+            .delay(function (d, i) { return i * 10; })
+
+        axis_x = axis_x.transition().duration(500);
+        axis_y = axis_y.transition().duration(500);
+    }
+    axis_x.call(d3.axisBottom(x));
+    axis_y.call(d3.axisLeft(y));
+    rect.attr("height", function (d) { return height - y(d.length); });
+    text.attr("y", function (d) {
+        let real_y = y(d.length) - height + 10
+        if (real_y > -13)
+            real_y = -13;
+        return real_y;
+    });
+
+}
+
+
+function hue(h) {
+    // svg.style("background-color", d3.hsl(h, 0.8, 0.8));
+
+    bin_size = Math.round(h / 2) * 2
+    handle.attr("transform", "translate(" + slide_x(bin_size) + "," + 0 + ")");
+    handle.select("text")
+        .text(formatCount(bin_size))
+        .attr("transform", "translate(" + -getWidthTick(bin_size) / 2 + "," + 20 + ")");
+    update_graph(false)
+}
+
+function hueMax(h) {
+    maximum = Math.round(h);
+    maximum = maximum > Math.round(d3.max(data) * 1.6) ? Math.round(d3.max(data) * 1.6) : maximum
+    now_data = data.filter((d) => {
+        return d >= minimum && d <= maximum
+    })
+
+    x.domain([minimum, maximum])
+    x2.domain([minimum, maximum])
+
+    handle_max.attr("transform", "translate(" + slide_x_max(maximum) + "," + 0 + ")");
+    handle_max.select("text")
+        .text(formatCount(maximum))
+        .attr("transform", "translate(" + -getWidthTick(maximum) / 2 + "," + 20 + ")");
+    update_graph(false)
+    selected_line.attr("x2", slide_x_max(maximum))
+}
+
+function hueMin(h) {
+    minimum = Math.round(h);
+    now_data = data.filter((d) => {
+        return d >= minimum && d <= maximum
+    })
+
+    x.domain([minimum, maximum])
+    x2.domain([minimum, maximum])
+
+    selected_line.attr("x1", slide_x_max(minimum))
+    handle_min.attr("transform", "translate(" + slide_x_max(minimum) + "," + 0 + ")");
+    handle_min.select("text")
+        .text(formatCount(minimum))
+        .attr("transform", "translate(" + -getWidthTick(minimum) / 2 + "," + 20 + ")");
+    update_graph(false)
+}
+
+function toggleScale() {
+    if (scaleLog) {
+        $('#changeScale').prop('checked', false);
+        minimum = 0
+        x = d3.scaleLinear()
+            .domain([minimum, maximum])
+            .range([0, width_graph])
+
+        x2 = d3.scaleLinear()
+            .domain([minimum, maximum])
+    } else {
+        $('#changeScale').prop('checked', true);
+        minimum = 1
+        x = d3.scaleLog().clamp(true)
+            .domain([minimum, maximum])
+            .range([0, width_graph])
+            .base(20)
+
+        x2 = d3.scaleLog().clamp(true)
+            .domain([minimum, maximum])
+            .base(20)
+    }
+    slide_x_max.domain([minimum, maximum])
+    hueMin(minimum)
+    update_graph(true)
+    scaleLog = !scaleLog
 }

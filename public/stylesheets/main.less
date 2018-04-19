@@ -9,12 +9,12 @@
 body {
     // padding: 50px;
     font-family: 'Open Sans', sans-serif;
-    color: #373c46;
+    color: @forth;
     background-color: #f4f7fb;
   }
   
   .navbar-grey {
-    background: #373c46;
+    background: @forth;
     position: fixed;
     top: 0;
     right: 0;
@@ -30,7 +30,7 @@ body {
   .sidebar {
     font-family: 'Exo', sans-serif;
     font-size: 120%;
-    background-color: #222729;
+    background-color: @forth;
     position: fixed;
     top: 0px;
     bottom: 0;
@@ -50,24 +50,30 @@ body {
       font-size: 16px;
       // font-size: 20px;
       color: white;
+      &:hover {
+        // color: @first;
+        background: lighten(@forth, 15%);
+      }
+      &.active {
+        color: @third;
+        background: lighten(@forth, 10%);
+      }
+      &.header {
+        // color: @first;
+        background: @forth;
+      }
     }
     hr {
-      margin: 0px 20px 20px 20px;
+      margin: 20px 20px 20px 20px;
       border-color: rgba(255, 255, 255, 0.5);
     }
     .header {
-      padding: 25px 20px 15px 20px;
+      padding: 25px 20px 0px 20px;
       font-size: 20px;
       text-align: center;
     }
     i {
       margin-right: 5px;
-    }
-    .nav-pills{
-      .active {
-        color: @tertiary;
-        background: #353d40;
-      }
     }
   }
   
@@ -88,6 +94,7 @@ main {
     .content {
         margin-left: auto;
         margin-right: auto;
+        padding-bottom: 15px;
         padding-right: 15px;
         padding-left: 15px;
     }

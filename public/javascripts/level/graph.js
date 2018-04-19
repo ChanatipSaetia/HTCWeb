@@ -1,11 +1,35 @@
 
 let margin = 30,
     width = parseInt(d3.select(".graphbox").style("width")) - margin * 3,
-    height = width * 0.6 - margin * 2;
+    height = width * 0.7 - margin * 2;
 
-var data = [{ "salesperson": "1", "sales": 33 }, { "salesperson": "2", "sales": 12 }, { "salesperson": "3", "sales": 41 }, { "salesperson": "4", "sales": 16 }
-    , { "salesperson": "5", "sales": 59 }, { "salesperson": "6", "sales": 38 }, { "salesperson": "7", "sales": 21 }, { "salesperson": "8", "sales": 25 }
-    , { "salesperson": "9", "sales": 30 }, { "salesperson": "10", "sales": 47 }];
+let dataset = $('.dataset_name').text().trim()
+
+if (height > 550) {
+    height = 550
+}
+
+var max_value = 0;
+query_data = $('.col-md-4.active').attr('data')
+$.ajax({
+    async: false,
+    url: '/core/' + dataset + '/level/' + query_data,
+    type: 'get',
+    success: function (result) {
+        data = result
+        for (let i of data) {
+            if (max_value < i.data) {
+                max_value = i.data
+            }
+        }
+        console.log(data);
+    },
+    error: function (err) {
+        console.error(err);
+        $('.result').text('Error!')
+    }
+});
+
 
 let level_rect_width = 160
 
@@ -24,7 +48,7 @@ var y = d3.scaleBand()
     .padding(0.1);
 
 var x = d3.scaleLinear()
-    .domain([0, 100])
+    .domain([0, max_value * 1.2])
     .rangeRound([0, width]);
 
 // append the svg object to the body of the page
@@ -43,35 +67,43 @@ svg = svg.append("g")
 
 // Scale the range of the data in the domains
 // x.domain([0, d3.max(data, function (d) { return d.sales; })])
-y.domain(data.map(function (d) { return d.salesperson; }));
+y.domain(data.map(function (d) { return d.level; }));
 //y.domain([0, d3.max(data, function(d) { return d.sales; })]);
 
 // append the rectangles for the bar chart
 level = svg.selectAll(".level")
     .data(data)
     .enter().append("g")
-    .attr("transform", function (d) { return 'translate(0,' + y(d.salesperson) + ')'; })
+    .attr("transform", function (d) { return 'translate(0,' + y(d.level) + ')'; })
     .attr("class", "level")
 
 level.append("rect")
     .attr("class", (d, i) => {
-        return "bar " + (i % 2 ? "primary" : "secondary")
+        color = ""
+        if (query_data == "classes") {
+            color = "first"
+        } else if (query_data == "leaf") {
+            color = "second"
+        } else {
+            color = "third"
+        }
+        return "bar " + color;
     })
     .attr("height", y.bandwidth()).transition()
     .duration(750)
     .delay(function (d, i) { return i * 10; })
-    .attr("width", function (d) { return x(d.sales); });
+    .attr("width", function (d) { return x(d.data); });
 
 level.append("text")
     .attr("class", "bar-text")
     .attr("y", function (d) { return (y.bandwidth() / 2) + 5; })
     .text((d) => {
-        return d.sales
+        return d3.format(",.0f")(d.data)
     })
     .transition()
     .duration(750)
     .delay(function (d, i) { return i * 10; })
-    .attr("x", function (d) { return x(d.sales) + 10; })
+    .attr("x", function (d) { return x(d.data) + 10; })
 
 level.append('line')
     .attr("x1", 50)
@@ -102,4 +134,4 @@ svg.append("g")
     .attr("dy", ".71em")
     .style("text-anchor", "end")
     .attr("fill", "black")
-    .text("# of documents");
+    .text("# of " + query_data);

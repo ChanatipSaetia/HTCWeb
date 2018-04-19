@@ -29,22 +29,21 @@
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: @first;
   stroke-width: 1.5px;
 }
 
 .filter-input {
     -webkit-box-flex: 0;
-    -ms-flex: 0 0 83.333333%;
-    flex: 0 0 85%;
-    max-width: 85%;
+    -ms-flex: 0 0 64%;
+    flex: 0 0 64%;
+    max-width: 64%;
 
 }
 
 .col-form-label {
-
     padding-left: 20px;
-    flex: 0 0 13%;
+    flex: 0 0 23%;
 }
 .root {
     cursor: text;
@@ -163,24 +162,26 @@
   }
 
   .btn-success {
-    background-color: @primary;
-    border-color: @primary;
+    background-color: @first;
+    border-color: @first;
   }
 
   .btn-danger {
-    background-color: @secondary;
-    border-color: @secondary;
+    background-color: @second;
+    border-color: @second;
   }
 
-  .btn-primary {
-    background-color: @tertiary;
-    border-color: @tertiary;
+  .btn-first {
+    background-color: @third;
+    border-color: @third;
     width: 10%;
+    margin-left:15px;
+    margin-top:8px;
   }
 
 
 .mouse-line {
-  stroke: @primary;
+  stroke: lighten(@forth,30);
   stroke-width: 2px;
 }
 
@@ -192,4 +193,9 @@
 .graphother {
   padding: 20px 45px 0px 0px;
   text-align: right;
+}
+
+.logscale {
+  font-size: 80%;
+  padding-bottom: 20px;
 }

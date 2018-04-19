@@ -1,30 +1,53 @@
-function create_graph(class_name, xaxis, yaxis, color) {
-
+function create_graph(class_name, xaxis, yaxis, color, data) {
 
     let graph = d3.select(class_name)
     let margin = 20;
 
     var width = parseInt(d3.select(".graphbox").style("width")) - margin * 3,
-        height = width * 0.4 - margin * 2;
+        height = width * 0.6 - margin * 2;
+
+    if (height >= 150) {
+        height = 150
+    }
 
     graph.attr('width', width + margin * 3)
         .attr('height', height + margin * 2)
 
-    var data = d3.range(1000).map(d3.randomLogNormal(Math.log(2), .4));
     var formatCount = d3.format(",.0f");
 
     var svg = d3.select(class_name)
         .attr("class", class_name + " " + color),
         g = svg.append("g").attr("transform", "translate(" + (margin + 20) + "," + margin + ")");
 
+    maximum = Math.round(d3.max(data) * 1.6)
+
     var x = d3.scaleLinear()
-        .domain([0, Math.round(d3.max(data) * 1.6)])
+        .domain([0, maximum])
         .rangeRound([0, width]);
+
+    x2 = d3.scaleLinear()
+        .domain([0, maximum])
 
     var bins = d3.histogram()
         .domain(x.domain())
-        .thresholds(x.ticks(10))
+        .thresholds([...Array(10).keys()].map((x) => x2.invert(x / 10)))
         (data);
+
+    if (bins[1].length / bins[0].length < 0.05) {
+        x = d3.scaleLog().clamp(true)
+            .domain([1, maximum])
+            .range([0, width])
+            .base(20)
+
+        x2 = d3.scaleLog().clamp(true)
+            .domain([1, maximum])
+            .base(20)
+
+        bins = d3.histogram()
+            .domain(x.domain())
+            .thresholds([...Array(10).keys()].map((x) => x2.invert(x / 10)))
+            (data);
+    }
 
     var y = d3.scaleLinear()
         .domain([0, d3.max(bins, function (d) { return d.length; })])
@@ -59,36 +82,6 @@ function create_graph(class_name, xaxis, yaxis, color) {
         .delay(function (d, i) { return i * 10; })
         .attr("height", function (d) { return height - y(d.length); });
 
-    // bar.append("text")
-    //     .attr("dy", ".75em")
-    //     .attr("x", - (x(bins[0].x1) - x(bins[0].x0)) / 2)
-    //     .attr("text-anchor", "middle")
-    //     .attr("fill", function (d) {
-    //         if (d.length < 30)
-    //             return "#000"
-    //         else
-    //             return "#fff"
-    //     })
-    //     .text(function (d) {
-    //         if (d.length > 0) {
-    //             return formatCount(d.length);
-    //         }
-    //         else {
-    //             return "";
-    //         }
-    //     }).transition()
-    //     .duration(750)
-    //     .delay(function (d, i) { return i * 10; })
-    //     .attr("y", function (d) {
-    //         let real_y = y(d.length) - height + 10
-    //         if (real_y > -13)
-    //             real_y = -13;
-    //         return real_y;
-    //     });
-
-
-
-
     g.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height + ")")
@@ -109,7 +102,7 @@ function create_graph(class_name, xaxis, yaxis, color) {
         // .attr("transform", "translate(0," + height + ")")
         .call(d3.axisLeft(y).ticks(3))
         .append("text")
-        // .attr("transform", "rotate(-90)")
+        // .atttr("transform", "rotate(-90)")
         .attr("x", 50)
         .attr("y", -10)
         .attr("dy", ".71em")
@@ -118,8 +111,23 @@ function create_graph(class_name, xaxis, yaxis, color) {
         .text("# of " + yaxis);
 }
 
-create_graph('.dc_graph', "documents", "classes", "tertiary")
-create_graph('.df_graph', "documents", "features", "primary")
-create_graph('.cf_graph', "classes", "features", "tertiary")
-create_graph('.fc_graph', "features", "classes", "primary")
+let dataset = $('.dataset_name').text().trim()
+
+$.ajax({
+    url: '/core/' + dataset + '/index',
+    type: 'get',
+    // data: {
+    //     code: "match x=(n:Year {Symbol: '" + val + "'})-[:board]-() return x"
+    // },
+    success: function (result) {
+        create_graph('.dc_graph', "documents", "classes", "third", result[0])
+        create_graph('.df_graph', "documents", "features", "first", result[2])
+        create_graph('.cf_graph', "classes", "features", "third", result[3])
+        create_graph('.fc_graph', "features", "classes", "first", result[1])
+    },
+    error: function (err) {
+        console.error(err);
+        $('.result').text('Error!')
+    }
+});
 

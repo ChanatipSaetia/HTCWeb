@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 
 var index = require('./routes/index');
+var data = require('./routes/data');
 var users = require('./routes/users');
 
 var app = express();
@@ -25,17 +26,18 @@ app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/core', data);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

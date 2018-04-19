@@ -8,10 +8,44 @@
     padding-bottom: 20px;
 }
 
-.primary {
-    fill: @secondary
+.first {
+    fill: @first
 }
 
-.secondary {
-    fill: @tertiary
+.second {
+    fill: @second
+}
+
+.third {
+    fill: @third
+}
+
+@margin_side : 2.5%;
+@width : (100% - (@margin_side * 6)) / 3;
+.col-md-4 {
+    color: white;
+    background-color: @forth;
+    margin: 0 @margin_side;
+    flex: 0 0 @width;
+    width: @width;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+
+    &:hover {
+        color: white;
+        background-color: lighten(@forth, 15%);
+    }
+}
+.classes {
+    color: white;
+    background-color: darken(@first, 15%);
+}
+.leaf {
+    color: white;
+    background-color: darken(@second, 15%);
+}
+.documents {
+    color: white;
+    background-color: darken(@third, 15%);
 }

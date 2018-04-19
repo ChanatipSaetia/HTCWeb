@@ -1,0 +1,76 @@
+
+@import "color";
+@sidebar_width: 250px;
+@main_width: calc( ~"100% - 250px" );
+
+@box_size: 50px;
+
+.box{
+    margin-bottom: 10px;
+    margin-right: 2em;
+    background-color: white;
+    box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+    padding-bottom: 10px;
+    .dataset-icon {
+        color: white;
+        text-align: right;
+        padding: 25px;
+        padding-bottom: 5px;
+        .btn-warning {
+            border-width: 0px;
+            background: @third;
+            padding: 0.75em 0.75em;
+            &:disabled {
+                opacity: 1;
+            }
+        }
+        .btn-first {
+            padding: 0.75em 0.75em;
+        }
+    }
+
+    .dataset-content {
+        padding: 10px 30px;
+        text-align: left;
+        // margin-top: 1em;
+        .dataset-title {
+            margin-top: 0.15em;
+            font-size: 3em;
+            // margin-bottom: 0.10em;
+        }
+        .processing {
+            color: #ffc107
+        }
+        .storing {
+            color: #ffc107
+        }
+        .waiting {
+            color: #dc3545
+        }
+        .ready {
+            color: #28a745
+        }
+    }
+
+    .dataset-button {
+        padding: 10px 25px;
+        text-align: center;
+    }
+    .btn-primary {
+        border-width: 0px;
+        background: @first;
+        &:hover {
+            background: darken(@first, 30%);
+        }
+    }
+
+    .btn-danger {
+        background: @second;
+        border-width: 0px;
+    }
+
+    .btn-secondary {
+        background: lighten(@forth, 30%);
+        border-width: 0px;
+    }
+}

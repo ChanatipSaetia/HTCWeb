@@ -30,20 +30,36 @@ main {
         }
 
       }
-      .blue {
+      .first {
         .number {
-          color: @primary;
+          color: darken(@first, 15%);
         }
         .subbox {
-          background: @primary;
+          background:  darken(@first, 15%);
         }
       }
-      .yellow {
+      .second {
         .number {
-          color: @secondary
+          color: @second
         }
         .subbox {
-          background: @secondary
+          background: @second
+        }
+      }
+      .forth {
+        .number {
+          color: @forth;
+        }
+        .subbox {
+          background: @forth;
+        }
+      }
+      .fifth {
+        .number {
+          color: @fifth;
+        }
+        .subbox {
+          background: @fifth;
         }
       }
     }
@@ -69,7 +85,7 @@ main {
           .more {
             font-size: 14px;
             text-align:right;
-            color: @primary;
+            color: @first;
           }
         }
         .bottom {

@@ -1,0 +1,30 @@
+version: "3"
+services:
+  neo4j:
+    image: neo4j
+    container_name: neo4j
+    environment:
+      NEO4J_AUTH: neo4j/neo
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+  server:
+    build: ./docker
+    container_name: htcweb-server
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    links:
+      - neo4j:neo4j
+    depends_on:
+      - "neo4j"
+  import:
+    build: ./import_data
+    volumes:
+      - ./import_data/data:/import/data
+    container_name: import_htc_data
+    links:
+      - neo4j:neo4j
+    depends_on:
+      - "neo4j"

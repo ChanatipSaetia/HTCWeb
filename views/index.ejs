@@ -26,55 +26,72 @@
             <hr/>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="/">
+            <a class="nav-link active" href="/<%= dataset %>/">
               <i class="fas fa-list-alt"></i> Summary</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/hierarchy">
+            <a class="nav-link" href="/<%= dataset %>/hierarchy">
               <i class="fas fa-sitemap"></i> Hierarchy</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/level">
+            <a class="nav-link" href="/<%= dataset %>/level">
               <i class="fas fa-sort-amount-down"></i> Level</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/classes">
+            <a class="nav-link" href="/<%= dataset %>/classes">
               <i class="fas fa-window-restore"></i> Class</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/features">
+            <a class="nav-link" href="/<%= dataset %>/features">
               <i class="fas fa-chart-bar"></i> Feature</a>
+          </li>
+          <hr/>
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="fas fa-arrow-alt-circle-left"></i> Back to Main Menu</a>
           </li>
         </ul>
       </nav>
       <main>
+        <p class="dataset_name" style="display: none;">
+          <%= dataset %>
+        </p>
         <div class="row main-header">
-          <i class="fas fa-database fa-lg"></i>&nbsp; Wiki Medium
+          <i class="fas fa-database fa-lg"></i>&nbsp;
+          <%= dataset %>
         </div>
         <hr/>
         <div class="content">
           <div class="row summary-box">
             <div class="col-3">
-              <div class="box blue">
-                <div class="number">123,123</div>
-                <div class="subbox">Data</div>
+              <div class="box first">
+                <div class="number">
+                  <%= document.toLocaleString('en') %>
+                </div>
+                <div class="subbox">Documents</div>
               </div>
             </div>
             <div class="col-3">
-              <div class="box yellow">
-                <div class="number">11</div>
+              <div class="box second">
+                <div class="number">
+                  <%= levels.toLocaleString('en') %>
+                </div>
                 <div class="subbox">Levels</div>
               </div>
             </div>
             <div class="col-3">
-              <div class="box blue">
-                <div class="number">17,284</div>
+              <div class="box first">
+                <div class="number">
+                  <%= features.toLocaleString('en') %>
+                </div>
                 <div class="subbox">Features</div>
               </div>
             </div>
             <div class="col-3">
-              <div class="box yellow">
-                <div class="number">24,538</div>
+              <div class="box second">
+                <div class="number">
+                  <%= classes.toLocaleString('en') %>
+                </div>
                 <div class="subbox">Classes</div>
               </div>
             </div>
@@ -87,27 +104,13 @@
                     <div class="col-9 title">
                       Documents x Classes</div>
                     <div class="col-3 more">
-                      <a href="/classes">
+                      <a href="/<%= dataset %>/classes">
                         more
                       </a>
                     </div>
                   </div>
                 </div>
                 <svg class="dc_graph"></svg>
-                <!-- <div class="bottom">
-                  <div class="row">
-                    <div class="col-4 label">Average</div>
-                    <div class="col-4 label next">Max</div>
-                    <div class="col-4 label next">Min</div>
-                  </div>
-                  <hr/>
-
-                  <div class="row">
-                    <div class="col-4">4</div>
-                    <div class="col-4 next">2000</div>
-                    <div class="col-4 next">1</div>
-                  </div>
-                </div> -->
               </div>
             </div>
             <div class="col-6">
@@ -117,27 +120,13 @@
                     <div class="col-9 title">
                       Documents x Features</div>
                     <div class="col-3 more">
-                      <a href="/features">
+                      <a href="/<%= dataset %>/features">
                         more
                       </a>
                     </div>
                   </div>
                 </div>
                 <svg class="df_graph"></svg>
-                <!-- <div class="bottom">
-                  <div class="row">
-                    <div class="col-4 label">Average</div>
-                    <div class="col-4 label next">Max</div>
-                    <div class="col-4 label next">Min</div>
-                  </div>
-                  <hr/>
-
-                  <div class="row">
-                    <div class="col-4">4</div>
-                    <div class="col-4 next">2000</div>
-                    <div class="col-4 next">1</div>
-                  </div>
-                </div> -->
               </div>
             </div>
             <div class="col-6">
@@ -147,27 +136,13 @@
                     <div class="col-9 title">
                       Features x Classes</div>
                     <div class="col-3 more">
-                      <a href="/classes/features">
+                      <a href="/<%= dataset %>/classes/features">
                         more
                       </a>
                     </div>
                   </div>
                 </div>
                 <svg class="fc_graph"></svg>
-                <!-- <div class="bottom">
-                  <div class="row">
-                    <div class="col-4 label">Average</div>
-                    <div class="col-4 label next">Max</div>
-                    <div class="col-4 label next">Min</div>
-                  </div>
-                  <hr/>
-
-                  <div class="row">
-                    <div class="col-4">4</div>
-                    <div class="col-4 next">2000</div>
-                    <div class="col-4 next">1</div>
-                  </div>
-                </div> -->
               </div>
             </div>
             <div class="col-6">
@@ -177,26 +152,13 @@
                     <div class="col-9 title">
                       Classes x Features</div>
                     <div class="col-3 more">
-                      <a href="/features/classes">
+                      <a href="/<%= dataset %>/features/classes">
                         more
                       </a>
                     </div>
                   </div>
                 </div>
                 <svg class="cf_graph"></svg>
-                <!-- <div class="bottom">
-                  <div class="row">
-                    <div class="col-4 label">Average</div>
-                    <div class="col-4 label next">Max</div>
-                    <div class="col-4 label next">Min</div>
-                  </div>
-                  <hr/>
-
-                  <div class="row">
-                    <div class="col-4">4</div>
-                    <div class="col-4 next">2000</div>
-                    <div class="col-4 next">1</div>
-                  </div> -->
               </div>
             </div>
           </div>
@@ -206,7 +168,7 @@
   </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>

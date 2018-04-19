@@ -6,16 +6,18 @@
     background: white;
     box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
 }
-.node circle {
-    fill: #fff;
+.node  {
+  z-index: 0;
+  circle {
+    // fill: #fff;
     stroke: rgb(129, 194, 255);
     stroke-width: 3px;
   }
   
-  .node text {
+  text {
     font: 12px sans-serif;
   }
-  
+}
   .link {
     fill: none;
     stroke: #dbdde4;
@@ -31,7 +33,9 @@
     box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
 }
 
-
+.hoverbox {
+  fill: lighten(@forth, 30%);
+}
 
 .filter-input {
     -webkit-box-flex: 0;
@@ -129,26 +133,26 @@
       }
   }
 
-  .btn-primary {
-    background-color: @tertiary;
-    border-color: @tertiary;
+  .btn-first {
+    background-color: @third;
+    border-color: @third;
     width: 10%;
   }
 
 .primary {
-  fill: @primary;
+  fill: @first;
 }
 
-.secondary {
-  fill: @secondary;
+.secondary circle {
+  fill: @second;
 }
 
-.tertiary {
-  fill: @tertiary;
+.tertiary circle{
+  fill: @third;
 }
 
 .level_rect {
-  fill: @primary;
+  fill: lighten(@forth, 30%);
 }
 
 .graph {
@@ -157,4 +161,23 @@
 
 .focus {
   padding: 0px 35px 30px 35px;
+}
+
+.grouppath {
+  z-index: -1;
+}
+
+.each_nav {
+  text {
+    fill:white;
+  }
+  rect {
+    &:hover {
+      fill: lighten(@forth, 15%);
+    }
+    color: @forth;
+  }
+  .arrow {
+    fill: black;
+  }
 }

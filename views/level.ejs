@@ -25,42 +25,57 @@
             <hr/>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/">
+            <a class="nav-link" href="/<%= dataset %>/">
               <i class="fas fa-list-alt"></i> Summary</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/hierarchy">
+            <a class="nav-link" href="/<%= dataset %>/hierarchy">
               <i class="fas fa-sitemap"></i> Hierarchy</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="/level">
+            <a class="nav-link active" href="/<%= dataset %>/level">
               <i class="fas fa-sort-amount-down"></i> Level</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/classes">
+            <a class="nav-link" href="/<%= dataset %>/classes">
               <i class="fas fa-window-restore"></i> Class</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/features">
+            <a class="nav-link" href="/<%= dataset %>/features">
               <i class="fas fa-chart-bar"></i> Feature</a>
+          </li>
+          <hr/>
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="fas fa-arrow-alt-circle-left"></i> Back to Main Menu</a>
           </li>
         </ul>
       </nav>
       <main>
+        <p class="dataset_name" style="display: none;">
+          <%= dataset %>
+        </p>
         <div class="row main-header">
-          <i class="fas fa-database fa-lg"></i>&nbsp; Wiki Medium
+          <i class="fas fa-database fa-lg"></i>&nbsp;
+          <%= dataset %>
         </div>
         <hr/>
         <div class="content">
           <div class="col-12 graphbox">
             <svg class="graph"></svg>
+            <div class="row">
+              <a href="/<%= dataset %>/level/classes" class="col-md-4 <%= data=='classes' ? 'classes active' : ''  %>" data="classes">Classes</a>
+              <a href="/<%= dataset %>/level/leaf" class="col-md-4 <%= data=='leaf' ? 'leaf active' : ''  %>" data="leaf">Leaf classes</a>
+              <a href="/<%= dataset %>/level/documents" class="col-md-4 <%= data=='documents' ? 'documents active' : ''  %>" data="documents">Documents in leaf classes</a>
+            </div>
           </div>
         </div>
       </main>
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
