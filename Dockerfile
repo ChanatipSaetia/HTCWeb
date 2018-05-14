@@ -12,4 +12,4 @@ RUN yarn install --quiet
 
 EXPOSE 3000
 
-CMD [ "yarn", "install" ]
+CMD [ "yarn", "start" ]
