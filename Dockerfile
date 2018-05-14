@@ -9,7 +9,7 @@ WORKDIR /app
 
 ADD . .
 RUN yarn install --quiet
-CMD ls
-# EXPOSE 3000
 
-# CMD [ "yarn", "install" ]
+EXPOSE 3000
+
+CMD [ "yarn", "install" ]
