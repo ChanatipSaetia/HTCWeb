@@ -9,10 +9,8 @@ services:
       - "7474:7474"
       - "7687:7687"
   server:
-    build: ./docker
+    build: .
     container_name: htcweb-server
-    volumes:
-      - .:/app
     ports:
       - "3000:3000"
     links:
